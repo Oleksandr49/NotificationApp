@@ -44,7 +44,7 @@ class ExamplePagerAdapter(fragmentActivity:FragmentActivity): FragmentStateAdapt
         return false
     }
 
-    private fun updateList(updatedList: ArrayList<ExampleFragment>){
+    fun updateList(updatedList: ArrayList<ExampleFragment>){
         Log.i("debug", "Updating list, oldSize:${fragments.size}, newSize:${updatedList.size}")
         DiffUtil.calculateDiff(ExampleDiffUtilCallback(fragments, updatedList)).also {fragments = updatedList
             it.dispatchUpdatesTo(this)}
