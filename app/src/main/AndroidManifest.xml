@@ -4,13 +4,15 @@
     package="com.test.notificationapp">
 
     <application
+        android:name=".application.NotificationApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NotificationApp">
-        <activity android:name=".MainActivity"
+        android:theme="@style/Theme.NotificationApp"
+        tools:ignore="AllowBackup">
+        <activity android:name=".view.MainActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>

@@ -1,10 +1,10 @@
-package com.test.notificationapp
+package com.test.notificationapp.view
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.test.notificationapp.data.NotificationFragmentData
 
 class ExamplePagerAdapter(fragmentActivity:FragmentActivity): FragmentStateAdapter(fragmentActivity) {
 
@@ -16,36 +16,27 @@ class ExamplePagerAdapter(fragmentActivity:FragmentActivity): FragmentStateAdapt
         return fragments[position]
     }
 
-    fun addFragment(fragment: ExampleFragment){
-        Log.i("debug", "Add fragment ${fragment.fragmentPage}")
-        val list = ArrayList<ExampleFragment>()
-        list.addAll(fragments)
-        list.add(fragment)
-        updateList(list)
-    }
-
-    fun removeFragment(fragment: ExampleFragment){
-        Log.i("debug", "Remove fragment ${fragment.fragmentPage}")
-        val list = ArrayList<ExampleFragment>()
-        for(item in fragments){
-            if(item.fragmentPage != fragment.fragmentPage)list.add(item)
-        }
-        updateList(list)
-    }
-
     override fun getItemId(position: Int): Long {
-        return fragments[position].fragmentPage.toLong()
+        return fragments[position].fragmentPage
     }
 
     override fun containsItem(itemId: Long): Boolean {
         for(item in fragments){
-            if(item.fragmentPage.toLong() == itemId) return true
+            if(item.fragmentPage == itemId) return true
         }
         return false
     }
 
-    fun updateList(updatedList: ArrayList<ExampleFragment>){
-        Log.i("debug", "Updating list, oldSize:${fragments.size}, newSize:${updatedList.size}")
+    fun initList(dataList: List<NotificationFragmentData>){
+        ArrayList<ExampleFragment>().also {
+            for(item in dataList){
+                it.add(ExampleFragment.getInstance(item.pageNumber))
+            }
+            updateList(it)
+        }
+    }
+
+    private fun updateList(updatedList: ArrayList<ExampleFragment>){
         DiffUtil.calculateDiff(ExampleDiffUtilCallback(fragments, updatedList)).also {fragments = updatedList
             it.dispatchUpdatesTo(this)}
     }
