@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">NotificationApp</string>
+    <string name="create_not_text">Create new notification</string>
+    <string name="creates_new_notification">Create new notification</string>
+    <string name="next_page">next page</string>
+    <string name="previous_page">previous page</string>
+</resources>
