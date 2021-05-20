@@ -8,9 +8,9 @@ import com.test.notificationapp.usecases.base.ReadAllUseCase
 
 class ActivityViewModel(private val getAllUseCase: ReadAllUseCase<NotificationPage>): BaseViewModel() {
 
-    val adapterItems = MutableLiveData<List<NotificationPage>>()
+    val adapterItems = MutableLiveData<Pair<Int, List<NotificationPage>>>()
 
-    fun updateAdapterItems() {
-        getAllUseCase.readAll(BaseSingleObserver({list -> adapterItems.postValue(list)},{disposable -> compositeDisposable.add(disposable) }))
+    fun updateAdapterItems(i: Int) {
+        getAllUseCase.readAll(BaseSingleObserver({list -> adapterItems.postValue(Pair(i, list))},{disposable -> compositeDisposable.add(disposable) }))
     }
 }

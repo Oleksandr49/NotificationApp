@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.test.notificationapp.databinding.ActivityMainBinding
 import com.test.notificationapp.viewmodels.ActivityViewModel
@@ -33,23 +34,25 @@ class MainActivity : AppCompatActivity() {
             setContentView(it.root)
         }
 
-        viewModel.updateAdapterItems()
-        sharedViewModel.addedToAdapter.observe(this, { viewModel.updateAdapterItems() })
-        sharedViewModel.removedFromAdapter.observe(this, { viewModel.updateAdapterItems() })
-        viewModel.adapterItems.observe(this, { list ->
+        NotificationPagerAdapter(this).also { adapter ->
+            binding?.pager?.adapter = adapter
+        }
 
-            val adapter = NotificationPagerAdapter(this).also { adapter ->
-                binding?.pager?.adapter = adapter
-            }
+        viewModel.updateAdapterItems(1)
+        sharedViewModel.addedToAdapter.observe(this, { viewModel.updateAdapterItems(2) })
+        sharedViewModel.removedFromAdapter.observe(this, {viewModel.updateAdapterItems(3) })
 
-            if (list.isNotEmpty()) {
-                adapter.initList(list)
-                goToPosition(notificationPage)
-
+        viewModel.adapterItems.observe(this, { pair ->
+            if (pair.second.isNotEmpty()) {
+                (binding?.pager?.adapter as NotificationPagerAdapter?)?.initList(pair.second)
+                when(pair.first) {
+                    1 -> goToPosition(notificationPage)
+                    2 -> goToPosition(0)
+                }
             } else
-                sharedViewModel.addToAdapter(1L)
+                sharedViewModel.addToAdapter()
         })
-
+        goToPosition(notificationPage)
         createNotificationChannel()
     }
 

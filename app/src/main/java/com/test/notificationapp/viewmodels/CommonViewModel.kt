@@ -5,19 +5,29 @@ import com.test.notificationapp.data.NotificationPage
 import com.test.notificationapp.usecases.base.BaseCompletableObserver
 import com.test.notificationapp.usecases.base.CreateUseCase
 import com.test.notificationapp.usecases.base.DeleteUseCase
+import com.test.notificationapp.usecases.base.NextIndexUseCase
 
-class CommonViewModel(private val creationUseCase: CreateUseCase<NotificationPage>,
-                      private val deletionUseCase: DeleteUseCase<NotificationPage>): BaseViewModel() {
+class CommonViewModel(
+    private val creationUseCase: CreateUseCase<NotificationPage>,
+    private val deletionUseCase: DeleteUseCase<NotificationPage>,
+    private val getNextIndexUseCase: NextIndexUseCase
+) : BaseViewModel() {
 
     val addedToAdapter = MutableLiveData<Long>()
-    val removedFromAdapter = MutableLiveData<Boolean>()
+    val removedFromAdapter = MutableLiveData<Long>()
 
-    fun addToAdapter(pageNumber:Long){
-        NotificationPage(pageNumber).also {
-            creationUseCase.create(it, BaseCompletableObserver({addedToAdapter.postValue(pageNumber)},{ disposable -> compositeDisposable.add(disposable) }))}
+    fun addToAdapter() {
+        val index = getNextIndexUseCase.getNextIndex()
+        creationUseCase.create(NotificationPage(index),
+            BaseCompletableObserver({ addedToAdapter.postValue(index) },
+                { disposable -> compositeDisposable.add(disposable) })
+        )
     }
 
-    fun removeFromAdapter(pageNumber:Long){
-        deletionUseCase.delete(pageNumber, BaseCompletableObserver({removedFromAdapter.postValue(true)},{disposable -> compositeDisposable.add(disposable)}))
+    fun removeFromAdapter(pageNumber: Long) {
+        deletionUseCase.delete(pageNumber,
+            BaseCompletableObserver({ removedFromAdapter.postValue(pageNumber) },
+                { disposable -> compositeDisposable.add(disposable) })
+        )
     }
 }

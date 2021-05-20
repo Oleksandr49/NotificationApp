@@ -31,7 +31,7 @@ class NotificationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         NotificationFragmentBinding.inflate(inflater, container, false).also { binding ->
-            binding.plusBtn.setOnClickListener { viewModel.addToAdapter(fragmentPage + 1) }
+            binding.plusBtn.setOnClickListener { viewModel.addToAdapter() }
             binding.minusBtn.also { button ->
                 if (fragmentPage != 1L) button.setOnClickListener {
                     viewModel.removeFromAdapter(fragmentPage)
@@ -40,7 +40,7 @@ class NotificationFragment : Fragment() {
                     }
                 }
                 else
-                    button.hide()
+                    button.visibility = View.INVISIBLE
             }
             binding.fragmentNumber.text = fragmentPage.toString()
             binding.createNotificationBtn.setOnClickListener { createNotification() }
@@ -56,10 +56,11 @@ class NotificationFragment : Fragment() {
             val pendingIntent: PendingIntent = PendingIntent.getActivity(activity, fragmentPage.toInt(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
             val notification = activity?.let {
                     NotificationCompat.Builder(it.applicationContext, "First")
-                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setSmallIcon(R.drawable.notification_icon)
                         .setContentTitle("You`ve created notification")
                         .setContentText("Notification $fragmentPage")
                         .setContentIntent(pendingIntent)
+                        .setPriority(2)
                         .build()
                 }
             activity?.applicationContext?.let {
