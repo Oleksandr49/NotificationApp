@@ -5,7 +5,7 @@ import io.reactivex.SingleObserver
 
 abstract class BaseSingleUseCase<E>: BaseUseCase() {
 
-     protected fun execute(observable: Single<E>, observer: SingleObserver<E>){
+     protected fun execute(observable: Single<E>, observer: SingleObserver<E>) {
         observable.subscribeOn(threadExecutorScheduler).observeOn(postExecutionThreadScheduler).subscribe(observer)
     }
 }

@@ -4,11 +4,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.test.notificationapp.data.NotificationFragmentData
+import com.test.notificationapp.data.NotificationPage
+import kotlin.math.max
 
-class ExamplePagerAdapter(fragmentActivity:FragmentActivity): FragmentStateAdapter(fragmentActivity) {
+class NotificationPagerAdapter(fragmentActivity:FragmentActivity): FragmentStateAdapter(fragmentActivity) {
 
-    private var fragments = ArrayList<ExampleFragment>()
+    private var fragments = ArrayList<NotificationFragment>()
+
+    fun getItemPositionById(id: Long) = max(fragments.indexOfFirst { it.fragmentPage == id }, 0)
 
     override fun getItemCount() = fragments.size
 
@@ -27,22 +30,22 @@ class ExamplePagerAdapter(fragmentActivity:FragmentActivity): FragmentStateAdapt
         return false
     }
 
-    fun initList(dataList: List<NotificationFragmentData>){
-        ArrayList<ExampleFragment>().also {
+    fun initList(dataList: List<NotificationPage>){
+        ArrayList<NotificationFragment>().also {
             for(item in dataList){
-                it.add(ExampleFragment.getInstance(item.pageNumber))
+                it.add(NotificationFragment.getInstance(item.pageNumber))
             }
             updateList(it)
         }
     }
 
-    private fun updateList(updatedList: ArrayList<ExampleFragment>){
-        DiffUtil.calculateDiff(ExampleDiffUtilCallback(fragments, updatedList)).also {fragments = updatedList
+    private fun updateList(updatedList: ArrayList<NotificationFragment>){
+        DiffUtil.calculateDiff(NotificationDiffUtilCallback(fragments, updatedList)).also {fragments = updatedList
             it.dispatchUpdatesTo(this)}
     }
 }
 
-private class ExampleDiffUtilCallback(val oldList: List<ExampleFragment>, val newList: List<ExampleFragment>):
+private class NotificationDiffUtilCallback(val oldList: List<NotificationFragment>, val newList: List<NotificationFragment>):
     DiffUtil.Callback() {
 
     override fun getOldListSize() = oldList.size

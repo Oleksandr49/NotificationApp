@@ -1,19 +1,19 @@
 package com.test.notificationapp.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import com.test.notificationapp.data.NotificationFragmentData
+import com.test.notificationapp.data.NotificationPage
 import com.test.notificationapp.usecases.base.BaseCompletableObserver
 import com.test.notificationapp.usecases.base.CreateUseCase
 import com.test.notificationapp.usecases.base.DeleteUseCase
 
-class CommonViewModel(private val creationUseCase: CreateUseCase<NotificationFragmentData>,
-                      private val deletionUseCase: DeleteUseCase<NotificationFragmentData>): BaseViewModel() {
+class CommonViewModel(private val creationUseCase: CreateUseCase<NotificationPage>,
+                      private val deletionUseCase: DeleteUseCase<NotificationPage>): BaseViewModel() {
 
     val addedToAdapter = MutableLiveData<Long>()
     val removedFromAdapter = MutableLiveData<Boolean>()
 
     fun addToAdapter(pageNumber:Long){
-        NotificationFragmentData(pageNumber).also {
+        NotificationPage(pageNumber).also {
             creationUseCase.create(it, BaseCompletableObserver({addedToAdapter.postValue(pageNumber)},{ disposable -> compositeDisposable.add(disposable) }))}
     }
 

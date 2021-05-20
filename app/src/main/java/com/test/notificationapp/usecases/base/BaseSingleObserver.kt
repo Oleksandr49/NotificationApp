@@ -4,7 +4,7 @@ import android.util.Log
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 
-class BaseSingleObserver<T>(private val callBack: (param:T)-> Unit,
+class BaseSingleObserver<T>(private val callBack: (param:T) -> Unit,
                             private val disposableAction: (disposable:Disposable)->Unit): SingleObserver<T> {
 
     override fun onSubscribe(d: Disposable) {

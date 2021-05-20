@@ -1,32 +1,32 @@
 package com.test.notificationapp.application
 
 import androidx.room.Room
+import com.test.notificationapp.data.NotificationPagesDatabase
+import com.test.notificationapp.data.NotificationPagesRepository
+import com.test.notificationapp.usecases.impl.NotificationPageCreationUseCase
+import com.test.notificationapp.usecases.impl.DeleteNotificationPageUseCase
+import com.test.notificationapp.usecases.impl.GetAllNotificationPagesUseCase
 import com.test.notificationapp.viewmodels.ActivityViewModel
 import com.test.notificationapp.viewmodels.CommonViewModel
-import com.test.notificationapp.data.Database
-import com.test.notificationapp.data.NDFRepository
-import com.test.notificationapp.usecases.impl.CreateNFD
-import com.test.notificationapp.usecases.impl.DeleteNFD
-import com.test.notificationapp.usecases.impl.GetAllNFD
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val applicationModules = module {
 
-    viewModel { ActivityViewModel(GetAllNFD(get())) }
-    viewModel { CommonViewModel(CreateNFD(get()), DeleteNFD(get()))}
+    viewModel { ActivityViewModel(get() as GetAllNotificationPagesUseCase) }
+    viewModel { CommonViewModel(get() as NotificationPageCreationUseCase, get() as DeleteNotificationPageUseCase)}
 
-    factory { CreateNFD(get()) }
-    factory { DeleteNFD(get()) }
-    factory { GetAllNFD(get()) }
+    factory { NotificationPageCreationUseCase(get() as NotificationPagesRepository) }
+    factory { DeleteNotificationPageUseCase(get() as NotificationPagesRepository) }
+    factory { GetAllNotificationPagesUseCase(get() as NotificationPagesRepository) }
 
-    single { NDFRepository(get())}
+    single { NotificationPagesRepository(get())}
 
     single {
-        Room.databaseBuilder(androidApplication(), Database::class.java, "Database")
+        Room.databaseBuilder(androidApplication(), NotificationPagesDatabase::class.java, "Database")
             .fallbackToDestructiveMigration()
             .build()
-            .dao()
+            .notificationPageDao()
     }
 }
